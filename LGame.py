@@ -9,7 +9,6 @@ import tkinter as tk
 from tkinter import *
 
 colorama_init()
-hey
 
 class Piece(Enum):
 	coin = -1
