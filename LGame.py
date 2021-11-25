@@ -1,9 +1,10 @@
 # L Game
 # Developed by Hunter Riddle & Max Lim Scrimali - 2021
+# test
 
 from enum import Enum
 import numpy as np
-from colorama import Fore, Back, Style 
+from colorama import Fore, Back, Style
 from colorama import init as colorama_init
 import tkinter as tk
 from tkinter import *
@@ -18,7 +19,7 @@ class Piece(Enum):
 
 def callback(event):
 	print("clicked at", event.x, event.y)
-	return 
+	return
 
 
 
@@ -38,7 +39,7 @@ class GameBoard(tk.Tk):
 
 	def _create_circle(self, x, y, r, **kwargs):
 		return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
-	
+
 	tk.Canvas.create_circle = _create_circle
 
 	def printBoard(self, array):
@@ -96,7 +97,7 @@ class GameBoard(tk.Tk):
 		# Player 1's Turn
 		if(self.player_turn == 1):
 
-			
+
 
 			# Count p1 placed
 			self.p1_placed = 0
@@ -111,9 +112,9 @@ class GameBoard(tk.Tk):
 			if(self.p1_placed == 0):
 				print(self.mouseClickToArrayNotation(yLocClick))
 				print(self.mouseClickToArrayNotation(xLocClick))
-				self.placePiece(Piece.p1, self.mouseClickToArrayNotation(xLocClick), self.mouseClickToArrayNotation(yLocClick)) 
+				self.placePiece(Piece.p1, self.mouseClickToArrayNotation(xLocClick), self.mouseClickToArrayNotation(yLocClick))
 
-			# Check if user has clicked inside P1 
+			# Check if user has clicked inside P1
 			for location in self.p1Locs:
 				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
 
@@ -166,9 +167,9 @@ class GameBoard(tk.Tk):
 			return 2
 		elif(n in range(315, 420)):
 			return 3
-		
 
-		
+
+
 
 
 
