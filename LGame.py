@@ -52,8 +52,8 @@ class GameBoard(tk.Tk):
 		self.spaceLocs = []
 		self.coinLocs = []
 
-		for column in range(4):
-			for row in range(4):
+		for row in range(4):
+			for column in range(4):
 				x1 = column*cellwidth
 				y1 = row*cellheight
 				x2 = x1 + cellwidth - 5
@@ -101,9 +101,9 @@ class GameBoard(tk.Tk):
 			# Count p1 placed
 			self.p1_placed = 0
 
-			for column in range(4):
-				for row in range(4):
-					if(self.board[column][row] == Piece.p1):
+			for row in range(4):
+				for column in range(4):
+					if(self.board[row][column] == Piece.p1):
 						self.p1_placed += 1
 
 
@@ -111,23 +111,24 @@ class GameBoard(tk.Tk):
 			if(self.p1_placed < 4):
 				print(self.mouseClickToArrayNotation(xLocClick))
 				print(self.mouseClickToArrayNotation(yLocClick))
-				self.placePiece(Piece.p1, self.mouseClickToArrayNotation(xLocClick), self.mouseClickToArrayNotation(yLocClick))
+				self.placePiece(Piece.p1, self.mouseClickToArrayNotation(yLocClick), self.mouseClickToArrayNotation(xLocClick))
 
-			# Check if user has clicked inside P1
-			for location in self.p1Locs:
-				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+			else:
+				# Check if user has clicked inside P1
+				for location in self.p1Locs:
+					if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
 
-					for column in range(4):
 						for row in range(4):
-							if(self.board[column][row] == Piece.p1):
-								self.placePiece(Piece.space, column, row)
+							for column in range(4):
+								if(self.board[row][column] == Piece.p1):
+									self.placePiece(Piece.space, row, column)
 
 
-					# self.selectPiece()
-					print(str(self.player_turn) +'p1' + str(location[0]) + str(location[1]))
-					# self.player_turn = -1
+						# self.selectPiece()
+						print(str(self.player_turn) +'p1' + str(location[0]) + str(location[1]))
+						# self.player_turn = -1
 
-					break
+						break
 
 
 
@@ -156,6 +157,7 @@ class GameBoard(tk.Tk):
 	def placePiece(self, piece_type, row, column):
 		self.board[row][column] = piece_type
 		self.printBoard(self.board)
+
 
 	def mouseClickToArrayNotation(self, n):
 		if(n in range(0, 100)):
