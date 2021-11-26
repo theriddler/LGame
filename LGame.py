@@ -109,9 +109,9 @@ class GameBoard(tk.Tk):
 
 
 			# If player hasn't placed any pieces yet
-			if(self.p1_placed == 0):
-				print(self.mouseClickToArrayNotation(yLocClick))
+			if(self.p1_placed < 4):
 				print(self.mouseClickToArrayNotation(xLocClick))
+				print(self.mouseClickToArrayNotation(yLocClick))
 				self.placePiece(Piece.p1, self.mouseClickToArrayNotation(xLocClick), self.mouseClickToArrayNotation(yLocClick))
 
 			# Check if user has clicked inside P1
