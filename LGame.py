@@ -16,6 +16,16 @@ class Piece(Enum):
 	p1 = 1
 	p2 = 2
 
+	def __str__(self):
+		if(self.value == -1):
+			return 'coin'
+		if(self.value == 0):
+			return 'space'
+		if(self.value == 1):
+			return 'p1'
+		if(self.value == 2):
+			return 'p2'
+
 def callback(event):
 	print("clicked at", event.x, event.y)
 	return
@@ -35,6 +45,8 @@ class GameBoard(tk.Tk):
 		self.player_turn = 1
 		self.p1_placed = 0
 		self.p2_placed = 0
+
+		self.piece_count = {}
 
 	def _create_circle(self, x, y, r, **kwargs):
 		return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
@@ -58,7 +70,6 @@ class GameBoard(tk.Tk):
 				y1 = row*cellheight
 				x2 = x1 + cellwidth - 5
 				y2 = y1 + cellheight - 5
-				num = self.board[row][column]
 				self.printPiece(self.board[row][column], row, column, x1, y1, x2, y2)
 
 
@@ -86,80 +97,117 @@ class GameBoard(tk.Tk):
 			self.p2Locs.append([(x1,y1),(x2,y2)])
 
 
+	def howManyPieces(self, piece_type):
+		# Count p1 placed
+		self.piece_count[str(piece_type)] = 0
 
-	# Selecting Piece Logic NEEDS WORK!!!!
+		for row in range(4):
+			for column in range(4):
+				if(self.board[row][column] == piece_type):
+					self.piece_count[str(piece_type)] += 1
+
+		return self.piece_count[str(piece_type)]
+
+	def clearPieces(self, piece_type):
+		for row in range(4):
+			for column in range(4):
+				if(self.board[row][column] == piece_type):
+					self.placePiece(Piece.space, row, column)
+
+
+	# Mouse Click Event Handler
 	def mouseClick(self, event):
 		xLocClick = event.x
 		yLocClick = event.y
 		print(event.x, event.y)
 
-		# Player 1's Turn
+	# --- Player 1's Turn  -------------------------------------------------------- 
 		if(self.player_turn == 1):
 
-
-
 			# Count p1 placed
-			self.p1_placed = 0
+			p1_count = self.howManyPieces(Piece.p1)
 
-			for row in range(4):
-				for column in range(4):
-					if(self.board[row][column] == Piece.p1):
-						self.p1_placed += 1
-
-
-			# If player hasn't placed any pieces yet
-			if(self.p1_placed < 3):
+			# Placing pieces 1-3
+			if(p1_count < 3):
 				array_column = self.mouseClickToArrayNotation(xLocClick)
 				array_row = self.mouseClickToArrayNotation(yLocClick)
 
 				if(self.board[array_row][array_column] == Piece.space):
 					self.placePiece(Piece.p1, array_row, array_column)
-			elif(self.p1_placed == 3):
+
+			# Placing final piece (4)
+			elif(p1_count == 3):
 				array_column = self.mouseClickToArrayNotation(xLocClick)
 				array_row = self.mouseClickToArrayNotation(yLocClick)
 
 				if(self.board[array_row][array_column] == Piece.space):
 					self.placePiece(Piece.p1, array_row, array_column)
-				# self.player_turn = -1
+				
 
+			# All pieces are placed on the board (4 total)
 			else:
+
+				# Check if is legal L
+				if(self.isLegalL(Piece.p1)):
+					self.player_turn = -1
+					pass
+
 				# Check if user has clicked inside P1
 				for location in self.p1Locs:
 					if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
 
-						for row in range(4):
-							for column in range(4):
-								if(self.board[row][column] == Piece.p1):
-									self.placePiece(Piece.space, row, column)
-
-
+						# Clear all pieces of P1
+						self.clearPieces(Piece.p1)
 						print(str(self.player_turn) +'p1' + str(location[0]) + str(location[1]))
 						break
 
 
 
-
-
-		# Player 2's Turn
-		elif(self.player_turn == 2):
-			for location in self.p2Locs:
-				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
-					print(str(self.player_turn) +'p2')
-					self.player_turn = -2
-
-		# Player 1's Turn (coin variation)
+	# --- Player 1's (coin) Turn -------------------------------------------------------- 
 		elif(self.player_turn == -1):
-			for location in self.coinLocs:
-				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
-					print(str(self.player_turn) +'coin')
-					self.player_turn = 2
+			coin_count = self.howManyPieces(Piece.coin)
 
-		# Player 2's Turn (coin variation)
-		elif(self.player_turn == -2):
-			for location in self.coinLocs:
-				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
-					print(str(self.player_turn) + 'coin')
-					self.player_turn = 1
+
+			if(coin_count == 2):
+
+				# If player has selected a coin location
+				for location in self.coinLocs:
+					if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+						array_column = self.mouseClickToArrayNotation(xLocClick)
+						array_row = self.mouseClickToArrayNotation(yLocClick)
+
+						if(self.board[array_row][array_column] == Piece.space):
+							self.placePiece(Piece.p1, array_row, array_column)
+
+						print(str(self.player_turn) +'coin')
+
+						# self.player_turn = 2
+
+
+
+	# 	# Player 2's Turn
+	# 	elif(self.player_turn == 2):
+	# 		for location in self.p2Locs:
+	# 			if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+	# 				print(str(self.player_turn) +'p2')
+	# 				self.player_turn = -2
+
+
+
+	# 	# Player 2's Turn (coin variation)
+	# 	elif(self.player_turn == -2):
+	# 		for location in self.coinLocs:
+	# 			if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+	# 				print(str(self.player_turn) + 'coin')
+	# 				self.player_turn = 1
+
+	def isLegalL(self, piece_type):
+		return False
+
+		for row in range(4):
+			for column in range(4):
+				if(self.board[row][column] == Piece.p1):
+					self.p1_placed += 1
 
 
 	def placePiece(self, piece_type, row, column):
@@ -176,6 +224,8 @@ class GameBoard(tk.Tk):
 			return 2
 		elif(n in range(315, 420)):
 			return 3
+
+
 
 
 
