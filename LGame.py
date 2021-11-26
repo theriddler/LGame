@@ -1,6 +1,5 @@
 # L Game
 # Developed by Hunter Riddle & Max Lim Scrimali - 2021
-# test
 
 from enum import Enum
 import numpy as np
