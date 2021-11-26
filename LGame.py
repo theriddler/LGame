@@ -108,10 +108,19 @@ class GameBoard(tk.Tk):
 
 
 			# If player hasn't placed any pieces yet
-			if(self.p1_placed < 4):
-				print(self.mouseClickToArrayNotation(xLocClick))
-				print(self.mouseClickToArrayNotation(yLocClick))
-				self.placePiece(Piece.p1, self.mouseClickToArrayNotation(yLocClick), self.mouseClickToArrayNotation(xLocClick))
+			if(self.p1_placed < 3):
+				array_column = self.mouseClickToArrayNotation(xLocClick)
+				array_row = self.mouseClickToArrayNotation(yLocClick)
+
+				if(self.board[array_row][array_column] == Piece.space):
+					self.placePiece(Piece.p1, array_row, array_column)
+			elif(self.p1_placed == 3):
+				array_column = self.mouseClickToArrayNotation(xLocClick)
+				array_row = self.mouseClickToArrayNotation(yLocClick)
+
+				if(self.board[array_row][array_column] == Piece.space):
+					self.placePiece(Piece.p1, array_row, array_column)
+				# self.player_turn = -1
 
 			else:
 				# Check if user has clicked inside P1
@@ -124,11 +133,10 @@ class GameBoard(tk.Tk):
 									self.placePiece(Piece.space, row, column)
 
 
-						# self.selectPiece()
 						print(str(self.player_turn) +'p1' + str(location[0]) + str(location[1]))
-						# self.player_turn = -1
-
 						break
+
+
 
 
 
