@@ -3,12 +3,9 @@
 
 from enum import Enum
 import numpy as np
-from colorama import Fore, Back, Style
-from colorama import init as colorama_init
 import tkinter as tk
 from tkinter import *
 
-colorama_init()
 
 class Piece(Enum):
 	coin = -1
