@@ -36,6 +36,7 @@ class GameBoard(tk.Tk):
 					[Piece.space, Piece.p2, Piece.p1, Piece.space], \
 					[Piece.space, Piece.p2, Piece.p2, Piece.coin]]
 
+		self.legalBoard = self.board
 		self.player_turn = 1
 		self.p1_placed = 0
 		self.p2_placed = 0
@@ -111,6 +112,8 @@ class GameBoard(tk.Tk):
 				if(self.board[row][column] == piece_type):
 					self.placePiece(Piece.space, row, column)
 
+		print(str(piece_type),  " - Cleared")
+
 
 	# Mouse Click Event Handler
 	def mouseClick(self, event):
@@ -121,12 +124,12 @@ class GameBoard(tk.Tk):
 	# --- Player 1's Turn  -------------------------------------------------------- 
 		if(self.player_turn == 1):
 
-			# Check if user has clicked inside P2
+			# Check if user has clicked inside P1
 			for location in self.p1Locs:
 				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+					
 					self.clearPieces(Piece.p1)
 					self.firstMove = False
-					print("P1 - Cleared")
 					return
 
 			# Count p1 placed
@@ -155,10 +158,10 @@ class GameBoard(tk.Tk):
 
 				# Check if user has clicked inside P1
 				if(self.firstMove):
+
 					# Clear all pieces of P1 and break out of mouseClick()
 					self.clearPieces(Piece.p1)
 					self.firstMove = False
-					print("P1 - Cleared")
 					return
 
 				# Check if is legal L
@@ -171,8 +174,6 @@ class GameBoard(tk.Tk):
 					print("ILLEGAL MOVE")
 					self.clearPieces(Piece.p1)
 					
-
-
 
 	# --- Player 1's (coin) Turn -------------------------------------------------------- 
 		elif(self.player_turn == -1):
@@ -211,11 +212,11 @@ class GameBoard(tk.Tk):
 
 			for location in self.p2Locs:
 				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+
 					self.clearPieces(Piece.p2)
 					self.firstMove = False
 					print("P2 - Cleared")
 					return
-
 
 
 			# Count p1 placed
@@ -243,10 +244,10 @@ class GameBoard(tk.Tk):
 
 				# Check if user has clicked inside P1
 				if(self.firstMove):
+
 					# Clear all pieces of P1 and break out of mouseClick()
 					self.clearPieces(Piece.p2)
 					self.firstMove = False
-					print("P2 - Cleared")
 					return
 
 				# Check if is legal L
@@ -346,8 +347,6 @@ class GameBoard(tk.Tk):
 			return False
 
 
-		
-
 		return True
 
 
@@ -365,12 +364,6 @@ class GameBoard(tk.Tk):
 			return 2
 		elif(n in range(315, 420)):
 			return 3
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
