@@ -36,13 +36,14 @@ class GameBoard(tk.Tk):
 					[Piece.space, Piece.p2, Piece.p1, Piece.space], \
 					[Piece.space, Piece.p2, Piece.p2, Piece.coin]]
 
-		self.legalBoard = self.board
 		self.player_turn = 1
 		self.p1_placed = 0
 		self.p2_placed = 0
 
 		self.piece_count = {}
 		self.firstMove = True
+		self.p1hasMoved = False
+		self.p2hasMoved = False
 
 
 	def _create_circle(self, x, y, r, **kwargs):
@@ -121,8 +122,14 @@ class GameBoard(tk.Tk):
 		yLocClick = event.y
 		print(event.x, event.y)
 
+
+
 	# --- Player 1's Turn  --------------------------------------------------------
 		if(self.player_turn == 1):
+
+			if(not self.p1hasMoved):
+				self.temp_p1_locs = self.p1Locs
+				self.p1hasMoved = True
 
 			# Check if user has clicked inside P1
 			for location in self.p1Locs:
@@ -158,7 +165,6 @@ class GameBoard(tk.Tk):
 
 				# Check if user has clicked inside P1
 				if(self.firstMove):
-
 					# Clear all pieces of P1 and break out of mouseClick()
 					self.clearPieces(Piece.p1)
 					self.firstMove = False
@@ -168,6 +174,7 @@ class GameBoard(tk.Tk):
 				elif(self.isLegalL(Piece.p1)):
 					self.player_turn = -1
 					self.firstMove = True
+					self.hasMoved = False
 					print("P1 - LEGAL L PLACED")
 
 				elif(not self.isLegalL(Piece.p1)):
@@ -209,6 +216,10 @@ class GameBoard(tk.Tk):
 
 	# --- Player 2 Turn  --------------------------------------------------------
 		if(self.player_turn == 2):
+
+			if(not self.p2hasMoved):
+				self.temp_p2_locs = self.p2Locs
+				self.p2hasMoved = True
 
 			for location in self.p2Locs:
 				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
@@ -254,6 +265,7 @@ class GameBoard(tk.Tk):
 				elif(self.isLegalL(Piece.p2)):
 					self.player_turn = -2
 					self.firstMove = True
+					self.hasMoved = False
 					print("P2 - LEGAL L PLACED")
 
 				elif(not self.isLegalL(Piece.p2)):
@@ -351,6 +363,14 @@ class GameBoard(tk.Tk):
 
 		if(L4[0] != L3[0] and L4[0] != L1[0] and L4[1] != L3[1] and L4[1] != L1[1]):
 			return False
+
+		if(self.p1hasMoved):
+			if(self.temp_p1_locs == self.p1Locs):
+				return False
+
+		if(self.p2hasMoved):
+			if(self.temp_p2_locs == self.p2Locs):
+				return False
 
 		return True
 
