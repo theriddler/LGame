@@ -34,7 +34,6 @@ class GameBoard(tk.Tk):
 		self.canvas = tk.Canvas(self, width=420, height=420, borderwidth=5, highlightthickness=0)
 		self.canvas.pack(side="top", fill="both", expand="false")
 
-
 		self.board = [[Piece.coin, Piece.p1, Piece.p1, Piece.space], \
 					[Piece.space, Piece.p2, Piece.p1, Piece.space], \
 					[Piece.space, Piece.p2, Piece.p1, Piece.space], \
@@ -397,6 +396,6 @@ class GameBoard(tk.Tk):
 if __name__ == "__main__":
     app = GameBoard()
     app.printBoard(app.board)
-    # app.minsize(420,450)
-    # app.maxsize(420,450)
+    # app.minsize(420,520)
+    # app.maxsize(420,520)
     app.mainloop()
