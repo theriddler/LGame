@@ -121,13 +121,13 @@ class GameBoard(tk.Tk):
 		yLocClick = event.y
 		print(event.x, event.y)
 
-	# --- Player 1's Turn  -------------------------------------------------------- 
+	# --- Player 1's Turn  --------------------------------------------------------
 		if(self.player_turn == 1):
 
 			# Check if user has clicked inside P1
 			for location in self.p1Locs:
 				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
-					
+
 					self.clearPieces(Piece.p1)
 					self.firstMove = False
 					return
@@ -151,7 +151,7 @@ class GameBoard(tk.Tk):
 
 				if(self.board[array_row][array_column] == Piece.space):
 					self.placePiece(Piece.p1, array_row, array_column)
-				
+
 
 			# All pieces are placed on the board (4 total)
 			elif(p1_count == 4):
@@ -173,15 +173,15 @@ class GameBoard(tk.Tk):
 				elif(not self.isLegalL(Piece.p1)):
 					print("ILLEGAL MOVE")
 					self.clearPieces(Piece.p1)
-					
 
-	# --- Player 1's (coin) Turn -------------------------------------------------------- 
+
+	# --- Player 1's (coin) Turn --------------------------------------------------------
 		elif(self.player_turn == -1):
 			coin_count = self.howManyPieces(Piece.coin)
 
 			#  All coins are on board (user to select removal)
 			if(coin_count == 2):
-				
+
 				# Get correct self.board[row][column]
 				array_row = self.mouseClickToArrayNotation(yLocClick)
 				array_column = self.mouseClickToArrayNotation(xLocClick)
@@ -191,7 +191,7 @@ class GameBoard(tk.Tk):
 					self.placePiece(Piece.space, array_row, array_column)
 
 
-			# User has removed a coin 
+			# User has removed a coin
 			if(coin_count == 1):
 				array_row = self.mouseClickToArrayNotation(yLocClick)
 				array_column = self.mouseClickToArrayNotation(xLocClick)
@@ -204,10 +204,10 @@ class GameBoard(tk.Tk):
 						# debug
 					print("P1 - COIN PLACED")
 					return
-				
 
 
-	# --- Player 2 Turn  -------------------------------------------------------- 
+
+	# --- Player 2 Turn  --------------------------------------------------------
 		if(self.player_turn == 2):
 
 			for location in self.p2Locs:
@@ -237,7 +237,7 @@ class GameBoard(tk.Tk):
 
 				if(self.board[array_row][array_column] == Piece.space):
 					self.placePiece(Piece.p2, array_row, array_column)
-				
+
 
 			# All pieces are placed on the board (4 total)
 			elif(p2_count == 4):
@@ -259,16 +259,16 @@ class GameBoard(tk.Tk):
 				elif(not self.isLegalL(Piece.p2)):
 					print("ILLEGAL MOVE")
 					self.clearPieces(Piece.p2)
-					
 
 
-	# --- Player 2 (coin) Turn -------------------------------------------------------- 
+
+	# --- Player 2 (coin) Turn --------------------------------------------------------
 		elif(self.player_turn == -2):
 			coin_count = self.howManyPieces(Piece.coin)
 
 			#  All coins are on board (user to select removal)
 			if(coin_count == 2):
-				
+
 				# Get correct self.board[row][column]
 				array_row = self.mouseClickToArrayNotation(yLocClick)
 				array_column = self.mouseClickToArrayNotation(xLocClick)
@@ -278,7 +278,7 @@ class GameBoard(tk.Tk):
 					self.placePiece(Piece.space, array_row, array_column)
 
 
-			# User has removed a coin 
+			# User has removed a coin
 			if(coin_count == 1):
 				array_row = self.mouseClickToArrayNotation(yLocClick)
 				array_column = self.mouseClickToArrayNotation(xLocClick)
@@ -291,11 +291,11 @@ class GameBoard(tk.Tk):
 						# debug
 					print("P2 - COIN PLACED")
 					return
-				
+
 
 
 	def isLegalL(self, piece_type):
-		
+
 		# Create list of player locations
 		locations = []
 		main_body = []
@@ -304,7 +304,7 @@ class GameBoard(tk.Tk):
 			for column in range(4):
 				if(self.board[row][column] == piece_type):
 					locations.append((row, column))
-		
+
 		print(locations)
 
 		# Create set of 3 locations that share an equal value {L1, L2, L3}
@@ -316,7 +316,7 @@ class GameBoard(tk.Tk):
 
 			# If X of 0, 1, 2 are equal
 			if(locations[L1][0] == locations[L2][0] and locations[L2][0] == locations[L3][0]):
-				
+
 				# Sort by Y VALUE (coz X is equal)
 				main_body = [locations[L1], locations[L2], locations[L3]]
 				main_body.sort(key = lambda x: x[1])
@@ -342,10 +342,15 @@ class GameBoard(tk.Tk):
 				print(L)
 
 		# Check {L4} is legal relative to {L1, L2, L3}
+		L1 = main_body[0]
 		L2 = main_body[1]
+		L3 = main_body[2]
+
 		if(L2[0] == L4[0] or L2[1] == L4[1]):
 			return False
 
+		if(L4[0] != L3[0] and L4[0] != L1[0] and L4[1] != L3[1] and L4[1] != L1[1]):
+			return False
 
 		return True
 
