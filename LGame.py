@@ -124,6 +124,16 @@ class GameBoard(tk.Tk):
 	# --- Player 1's Turn  -------------------------------------------------------- 
 		if(self.player_turn == 1):
 
+			# Check if user has clicked inside P1
+			for location in self.p1Locs:
+				if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+
+					# Clear all pieces of P1
+					self.clearPieces(Piece.p1)
+					print(str(self.player_turn) +'p1' + str(location[0]) + str(location[1]))
+					return
+
+
 			# Count p1 placed
 			p1_count = self.howManyPieces(Piece.p1)
 
@@ -145,21 +155,22 @@ class GameBoard(tk.Tk):
 				
 
 			# All pieces are placed on the board (4 total)
-			else:
+			elif(p1_count == 4):
+
+			# 	# Check if user has clicked inside P1
+			# 	for location in self.p1Locs:
+			# 		if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
+
+			# 			# Clear all pieces of P1
+			# 			self.clearPieces(Piece.p1)
+			# 			print(str(self.player_turn) +'p1' + str(location[0]) + str(location[1]))
+			# 			break
 
 				# Check if is legal L
 				if(self.isLegalL(Piece.p1)):
 					self.player_turn = -1
+					print("Player 1 COIN TURN")
 					pass
-
-				# Check if user has clicked inside P1
-				for location in self.p1Locs:
-					if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
-
-						# Clear all pieces of P1
-						self.clearPieces(Piece.p1)
-						print(str(self.player_turn) +'p1' + str(location[0]) + str(location[1]))
-						break
 
 
 
@@ -173,15 +184,19 @@ class GameBoard(tk.Tk):
 				# If player has selected a coin location
 				for location in self.coinLocs:
 					if(xLocClick in range(location[0][0], location[1][0]) and yLocClick in range(location[0][1], location[1][1])):
-						array_column = self.mouseClickToArrayNotation(xLocClick)
+
+						# Get correct self.board[row][column]
 						array_row = self.mouseClickToArrayNotation(yLocClick)
+						array_column = self.mouseClickToArrayNotation(xLocClick)
 
-						if(self.board[array_row][array_column] == Piece.space):
-							self.placePiece(Piece.p1, array_row, array_column)
+						# If selected a valid 'space'
+						if(self.board[array_row][array_column] == Piece.coin):
+							self.placePiece(Piece.space, array_row, array_column)
 
+						# debug
 						print(str(self.player_turn) +'coin')
 
-						# self.player_turn = 2
+			# self.player_turn = 2
 
 
 
@@ -202,7 +217,7 @@ class GameBoard(tk.Tk):
 	# 				self.player_turn = 1
 
 	def isLegalL(self, piece_type):
-		return False
+		return True
 
 		for row in range(4):
 			for column in range(4):
