@@ -29,8 +29,12 @@ class Piece(Enum):
 class GameBoard(tk.Tk):
 	def __init__(self, *args, **kwargs):
 		tk.Tk.__init__(self, *args, **kwargs)
+		self.title("L Game")
+		self.bind_all("<Button-1>", self.mouseClick)
 		self.canvas = tk.Canvas(self, width=420, height=420, borderwidth=5, highlightthickness=0)
 		self.canvas.pack(side="top", fill="both", expand="false")
+
+
 		self.board = [[Piece.coin, Piece.p1, Piece.p1, Piece.space], \
 					[Piece.space, Piece.p2, Piece.p1, Piece.space], \
 					[Piece.space, Piece.p2, Piece.p1, Piece.space], \
@@ -50,7 +54,6 @@ class GameBoard(tk.Tk):
 		return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
 
 	tk.Canvas.create_circle = _create_circle
-
 
 	def printBoard(self, array):
 		cellwidth = 105
@@ -394,8 +397,6 @@ class GameBoard(tk.Tk):
 if __name__ == "__main__":
     app = GameBoard()
     app.printBoard(app.board)
-    app.bind_all("<Button-1>", app.mouseClick)
-    app.wm_title("L Game")
-    app.minsize(420,450)
-    app.maxsize(420,450)
+    # app.minsize(420,450)
+    # app.maxsize(420,450)
     app.mainloop()
