@@ -43,10 +43,12 @@ class GameBoard(tk.Tk):
 		self.piece_count = {}
 		self.firstMove = True
 
+
 	def _create_circle(self, x, y, r, **kwargs):
 		return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
 
 	tk.Canvas.create_circle = _create_circle
+
 
 	def printBoard(self, array):
 		cellwidth = 105
@@ -164,6 +166,10 @@ class GameBoard(tk.Tk):
 					self.player_turn = -1
 					self.firstMove = True
 					print("P1 - LEGAL L PLACED")
+
+				elif(not self.isLegalL(Piece.p1)):
+					print("ILLEGAL MOVE")
+					self.clearPieces(Piece.p1)
 					
 
 
@@ -248,6 +254,10 @@ class GameBoard(tk.Tk):
 					self.player_turn = -2
 					self.firstMove = True
 					print("P2 - LEGAL L PLACED")
+
+				elif(not self.isLegalL(Piece.p2)):
+					print("ILLEGAL MOVE")
+					self.clearPieces(Piece.p2)
 					
 
 
@@ -284,12 +294,61 @@ class GameBoard(tk.Tk):
 
 
 	def isLegalL(self, piece_type):
-		return True
+		
+		# Create list of player locations
+		locations = []
+		main_body = []
 
 		for row in range(4):
 			for column in range(4):
-				if(self.board[row][column] == Piece.p1):
-					self.p1_placed += 1
+				if(self.board[row][column] == piece_type):
+					locations.append((row, column))
+		
+		print(locations)
+
+		# Create set of 3 locations that share an equal value {L1, L2, L3}
+		for L in range(4):
+
+			L1 = L
+			L2 = (L+1)%4
+			L3 = (L+2)%4
+
+			# If X of 0, 1, 2 are equal
+			if(locations[L1][0] == locations[L2][0] and locations[L2][0] == locations[L3][0]):
+				
+				# Sort by Y VALUE (coz X is equal)
+				main_body = [locations[L1], locations[L2], locations[L3]]
+				main_body.sort(key = lambda x: x[1])
+				break
+
+			# If Y of 0, 1, 2 are equal
+			if(locations[L1][1] == locations[L2][1] and locations[L2][1] == locations[L3][1]):
+
+				# Sort by X VALUE (coz Y is equal)
+				main_body = [locations[L1], locations[L2], locations[L3]]
+				main_body.sort(key = lambda x: x[0])
+				break
+
+		# Return false if no main_body is found
+		if(main_body == []):
+			return False
+		print(main_body)
+
+		# Determine excluded location {L4}
+		for L in locations:
+			if(L not in main_body):
+				L4 = L
+				print(L)
+
+		# Check {L4} is legal relative to {L1, L2, L3}
+		L2 = main_body[1]
+		if(L2[0] == L4[0] or L2[1] == L4[1]):
+			return False
+
+
+		
+
+		return True
 
 
 	def placePiece(self, piece_type, row, column):
