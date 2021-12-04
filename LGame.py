@@ -26,24 +26,41 @@ class Piece(Enum):
 class GameBoard(tk.Tk):
 	def __init__(self, *args, **kwargs):
 		tk.Tk.__init__(self, *args, **kwargs)
-		self.title("L Game")
-		self.bind_all("<Button-1>", self.mouseClick)
-		self.canvas = tk.Canvas(self, width=420, height=420, borderwidth=5, highlightthickness=0)
-		self.canvas.pack(side="top", fill="both", expand="false")
 
+		# Starting board
 		self.board = [[Piece.COIN, Piece.P1, Piece.P1, Piece.SPACE], \
 					[Piece.SPACE, Piece.P2, Piece.P1, Piece.SPACE], \
 					[Piece.SPACE, Piece.P2, Piece.P1, Piece.SPACE], \
 					[Piece.SPACE, Piece.P2, Piece.P2, Piece.COIN]]
 
+		# Control flow variables
 		self.player_turn = 1
 		self.p1_placed = 0
 		self.p2_placed = 0
-
 		self.piece_count = {}
 		self.firstMove = True
 		self.p1hasMoved = False
 		self.p2hasMoved = False
+
+		# TKINTER Init
+		self.title("L Game")
+		self.bind_all("<Button-1>", self.mouseClick)
+		self.minsize(420,520)
+		self.maxsize(420,520)
+		self.canvas = tk.Canvas(self, width=420, height=420, borderwidth=5, highlightthickness=0)
+		self.canvas.pack(side="top", fill="both", expand="false")
+
+	# def welcome_screen(self):
+	# 	self.welcome_frame = tk.Frame(self,bg='#DCE0E1')
+	# 	self.welcome_frame.pack(fill=BOTH,expand=True)
+	#
+	# 	Label(self.welcome_frame, text='Select the Game Mode',
+	# 			bg='#DCE0E1', fg='#000000',
+	# 			font=('',20)).pack(padx=10,pady=40)
+	#
+	# 	Button(self.welcome_frame, text='Player vs Computer', fg='#000000',
+	# 		command=lambda: self.canvas.pack(side="top", fill="both", expand="false"))
+
 
 	def _create_circle(self, x, y, r, **kwargs):
 		return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
@@ -358,6 +375,18 @@ class GameBoard(tk.Tk):
 		L2 = main_body[1]
 		L3 = main_body[2]
 
+		# if oriented on Y axis
+		if(L1[0] == L2[0] and L2[0] == L3[0]):
+			# if Y-values are not seperated by exactly 1
+			if((L1[1] + 1 != L2[1]) or (L1[1] + 2 != L3[1])):
+				return False
+
+		# if oriented on X axis
+		if(L1[1] == L2[1] and L2[1] == L3[1]):
+			# if Y-values are not seperated by exactly 1
+			if((L1[0] + 1 != L2[0]) or (L1[0] + 2 != L3[0])):
+				return False
+
 		if(L2[0] == L4[0] or L2[1] == L4[1]):
 			return False
 
@@ -394,6 +423,4 @@ class GameBoard(tk.Tk):
 if __name__ == "__main__":
     app = GameBoard()
     app.printBoard(app.board)
-    # app.minsize(420,520)
-    # app.maxsize(420,520)
     app.mainloop()
