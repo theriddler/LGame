@@ -1,2 +1,2 @@
 # LGame
-Alightweight Python implementation of the 'LGame'
+A lightweight Python implementation of the 'LGame'
